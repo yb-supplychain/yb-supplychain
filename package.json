@@ -19,6 +19,10 @@
   "homepage": "https://github.com/yb-supplychain/yb-supplychain#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.17.5",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-scripts": "1.1.4",
+    "semantic-ui-react": "^0.81.1"
   }
 }
