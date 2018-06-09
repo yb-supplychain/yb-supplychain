@@ -1,0 +1,14 @@
+.form {
+  width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown {
+  width: 300px;
+}
+
+.quantityField {
+  width: 350px;
+}

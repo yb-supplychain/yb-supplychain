@@ -15,22 +15,32 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react'
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+import Order from './Order'
+import Main from './Main'
+import Login from './Login'
 
 /* eslint-disable react/no-multi-comp */
 /* Heads up! HomepageHeading uses inline styling, however it's not the best practice. Use CSS or styled components for
  * such things.
  */
-const HomepageHeading = ({ mobile }) => (
+const HomepageHeading = () => (
   <Container text>
     <Header
       as='h1'
-      content='Imagine-a-Company'
+      content='YB-SupplyChain'
       inverted
       style={{
-        fontSize: mobile ? '2em' : '4em',
+        fontSize: '4em',
         fontWeight: 'normal',
         marginBottom: 0,
-        marginTop: mobile ? '1.5em' : '3em',
+        marginTop: '3em',
       }}
     />
     <Header
@@ -38,9 +48,9 @@ const HomepageHeading = ({ mobile }) => (
       content='Do whatever you want when you want to.'
       inverted
       style={{
-        fontSize: mobile ? '1.5em' : '1.7em',
+        fontSize: '1.7em',
         fontWeight: 'normal',
-        marginTop: mobile ? '0.5em' : '1.5em',
+        marginTop: '1.5em',
       }}
     />
     <Button primary size='huge'>
@@ -49,10 +59,6 @@ const HomepageHeading = ({ mobile }) => (
     </Button>
   </Container>
 )
-
-HomepageHeading.propTypes = {
-  mobile: PropTypes.bool,
-}
 
 /* Heads up!
  * Neither Semantic UI nor Semantic UI React offer a responsive navbar, however, it can be implemented easily.
@@ -64,9 +70,11 @@ class DesktopContainer extends Component {
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
 
+  handleMenuClick = (e, { name }) => this.setState({activeItem: name})
+
   render() {
     const { children } = this.props
-    const { fixed } = this.state
+    const { fixed, activeItem } = this.state
 
     return (
       <Responsive {...Responsive.onlyComputer}>
@@ -89,31 +97,40 @@ class DesktopContainer extends Component {
               size='large'
             >
               <Container>
-                <Menu.Item as='a' active>
-                  Home
+                <Menu.Item name='/' active={activeItem === '/'} onClick={this.handleMenuClick} >
+                  <NavLink to='/'> Home </NavLink>
                 </Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
-                <Menu.Item as='a'>Company</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item name='order' active={activeItem === 'order'} onClick={this.handleMenuClick} >
+                  <NavLink to='/order'> Orders </NavLink>
+                </Menu.Item>
+                <Menu.Item name='reports' active={activeItem === 'reports'} onClick={this.handleMenuClick} >
+                  <NavLink to='/reports'> Reports </NavLink>
+                </Menu.Item >
+                <Menu.Item name='invoices' active={activeItem === 'invoices'} onClick={this.handleMenuClick} >
+                  <NavLink to='/invoices'> Invoices </NavLink>
+                </Menu.Item >
+                <Menu.Item name='manage' active={activeItem === 'manage'} onClick={this.handleMenuClick} >
+                  <NavLink to='/manage'> Manage </NavLink>
+                </Menu.Item >
                 <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
                 </Menu.Item>
               </Container>
             </Menu>
-            <HomepageHeading />
+            <MainPages/>
           </Segment>
         </Visibility>
-
-        {children}
       </Responsive>
+
     )
   }
 }
+
+const MainPages = () => (
+  <Switch>
+    <Route exact path='/' component={Main}></Route>
+    <Route exact path='/order' component={Login}></Route>
+  </Switch>
+);
 
 DesktopContainer.propTypes = {
   children: PropTypes.node,
@@ -328,5 +345,6 @@ const HomepageLayout = () => (
     </Segment>
   </ResponsiveContainer>
 )
+
 
 export default HomepageLayout
