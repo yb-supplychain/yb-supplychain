@@ -56,9 +56,12 @@ typings/
 
 # dotenv environment variables file
 .env
+*.env
 
 # next.js build output
 .next
 
-# API Keys
-secrets.env
+# system files
+.DS_Store
+
+build/

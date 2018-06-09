@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start-server": "nodemon server/index.js",
-    "start": "react-scripts start",
+    "start-app": "react-scripts start",
+    "start": "concurrently \"yarn run start-app\" \"yarn run start-server\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
@@ -14,6 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/yb-supplychain/yb-supplychain.git"
   },
+  "proxy": "http://localhost:3001/",
   "author": "yb-supplychain",
   "license": "ISC",
   "bugs": {
@@ -21,6 +23,9 @@
   },
   "homepage": "https://github.com/yb-supplychain/yb-supplychain#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "concurrently": "^3.5.1",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "nodemon": "^1.17.5",
     "react": "^16.4.0",

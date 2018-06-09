@@ -63,7 +63,14 @@ class DesktopContainer extends Component {
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
+  async componentDidMount() {
+    const response = await fetch('/factom');
+     const body = await response.json();
+     console.log('mounted', body);
+     if (response.status !== 200) throw Error(body.message);
 
+     return body;
+  }
   render() {
     const { children } = this.props
     const { fixed } = this.state
