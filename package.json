@@ -1,0 +1,24 @@
+{
+  "name": "yb-supplychain",
+  "version": "1.0.0",
+  "description": "A Supply Chain Company",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yb-supplychain/yb-supplychain.git"
+  },
+  "author": "yb-supplychain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yb-supplychain/yb-supplychain/issues"
+  },
+  "homepage": "https://github.com/yb-supplychain/yb-supplychain#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5"
+  }
+}
