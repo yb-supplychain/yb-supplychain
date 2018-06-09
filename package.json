@@ -1,17 +1,38 @@
 {
-  "name": "factom",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-scripts": "1.1.4",
-    "semantic-ui-react": "^0.81.1"
-  },
+  "name": "yb-supplychain",
+  "version": "1.0.0",
+  "description": "A Supply Chain Company",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start-server": "nodemon server/index.js",
+    "start-app": "react-scripts start",
+    "start": "concurrently \"yarn run start-app\" \"yarn run start-server\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yb-supplychain/yb-supplychain.git"
+  },
+  "proxy": "http://localhost:3001/",
+  "author": "yb-supplychain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yb-supplychain/yb-supplychain/issues"
+  },
+  "homepage": "https://github.com/yb-supplychain/yb-supplychain#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "concurrently": "^3.5.1",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-scripts": "1.1.4",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
+    "semantic-ui-react": "^0.81.1"
   }
 }
