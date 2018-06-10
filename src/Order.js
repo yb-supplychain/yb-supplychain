@@ -5,6 +5,9 @@ import { Form, Segment, Select, Input, Step } from 'semantic-ui-react'
 import StepComponent from './StepComponent'
 import CreateOrderShop from './CreateOrderShop'
 import ConfirmationShop from './ConfirmationShop'
+import StatusShop from './StatusShop'
+import CompletedShop from './CompletedShop'
+import StatusCompletedShop from './StatusCompletedShop'
 
 class Order extends Component {
   state = {grade: '', strain: '' , quantity: '', step: 'createOrder'}
@@ -24,7 +27,7 @@ class Order extends Component {
     } else if (field === 'status') {
       this.setState({step: 'summary'})
     } else if (field === 'summary') {
-      this.setState({step: 'summary'})
+      this.setState({step: 'statusAgain'})
     }
   }
 
@@ -40,6 +43,18 @@ class Order extends Component {
 
         {step === 'confirmation' &&
           <ConfirmationShop step={step} handleStep={this.handleStep} />
+        }
+
+        {step === 'status' &&
+          <StatusShop step={step} handleStep={this.handleStep} />
+        }
+
+        {step === 'summary' &&
+        <CompletedShop step={step} handleStep={this.handleStep} />
+        }
+
+        {step === 'statusAgain' &&
+          <StatusCompletedShop step={step} handleStep={this.handleStep} />
         }
 
       </div>

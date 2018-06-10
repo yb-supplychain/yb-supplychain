@@ -14,26 +14,22 @@ const strainOptions = [
 
 class CreateOrderFarm extends Component {
 
+handleChange = async (e, {value}) => {
+  await this.setState({user: value})
+  this.props.handleUser(this.state.user)
+}
+
+
   render() {
-    const {step, handleStep} = this.props
+    const {step, handleStep, handleUser, users, user} = this.props
     return (
       <Segment inverted textAlign='center'>
       <Form inverted className="form">
-        <Form.Group>
-        <Form.Select className="dropdown" name='grade' control={Select} label='Grade' options={gradeOptions} placeholder='Please select your grade' onChange={this.handleChange}/>
-        </Form.Group>
 
         <Form.Group>
-        <Form.Select className="dropdown" name='strain' control={Select} label='Strain' options={strainOptions} placeholder='Please select your strain' onChange={this.handleChange}/>
+        <Form.Select className="dropdown" value={user} name='user' control={Select} label='Requests' options={users} placeholder='Please select a request' onChange={this.handleChange}/>
         </Form.Group>
-
-        <Form.Group inline>
-      <Form.Field className="quantityField" >
-        <label>Quantity</label>
-        <Input name='quantity' placeholder='Desired grams' onChange={this.handleChange} />
-      </Form.Field>
-      </Form.Group>
-      <Form.Button onClick={() => handleStep(step)}>Create Order</Form.Button>
+      <Form.Button onClick={() => handleStep(step)}>Accept Request</Form.Button>
       </Form>
       </Segment>
   )}
