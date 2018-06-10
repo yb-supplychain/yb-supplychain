@@ -14,6 +14,7 @@ import {
   Segment,
   Sidebar,
   Visibility,
+  Item
 } from 'semantic-ui-react'
 import {
   BrowserRouter as Router,
@@ -22,17 +23,29 @@ import {
   Switch,
   Redirect
 } from 'react-router-dom'
+import Background from './background.jpg'
+import SanFran from './sanfran.jpg'
+
+var sectionStyle = {
+  height: '100%',
+  width: '100%',
+  backgroundImage: `url(${Background})`
+}
+
+const description = [
+  'Cute dogs come in a variety of shapes and sizes. Some cute dogs are cute for their adorable faces, others for their',
+  'tiny stature, and even others for their massive size.',
+].join(' ')
 
 class Main extends Component {
   state = {}
 
   render () {
     return (
-      <div>
       <Container text>
         <Header
           as='h1'
-          content='YB-SupplyChain'
+          content='YB SUPPLY CHAIN'
           inverted
           style={{
             fontSize: '4em',
@@ -43,7 +56,7 @@ class Main extends Component {
         />
         <Header
           as='h2'
-          content='Whatever you want to sell, we got you.'
+          content='Logistics for the Modern World'
           inverted
           style={{
             fontSize: '1.7em',
@@ -51,12 +64,7 @@ class Main extends Component {
             marginTop: '1.5em',
           }}
         />
-        <Button primary size='huge'>
-          Get Started
-          <Icon name='right arrow' />
-        </Button>
       </Container>
-      </div>
     )
   }
 }

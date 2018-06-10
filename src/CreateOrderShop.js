@@ -5,6 +5,7 @@ const gradeOptions = [
   { key: 'r', text: 'Regular', value: 'regular' },
   { key: 'p', text: 'Premium', value: 'premium' },
 ]
+
 const strainOptions = [
   { key: 'o', text: 'OG Kush', value: 'og kush' },
   { key: 'g', text: 'Green Crack', value: 'green crack' },

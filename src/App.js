@@ -25,6 +25,9 @@ import {
 import Order from './Order'
 import Main from './Main'
 import Login from './Login'
+import SanFran from './sanfran.jpg'
+import Settler from './settler.jpg'
+import Future from './future.png'
 
 /* eslint-disable react/no-multi-comp */
 /* Heads up! HomepageHeading uses inline styling, however it's not the best practice. Use CSS or styled components for
@@ -65,7 +68,7 @@ const HomepageHeading = () => (
  * It can be more complicated, but you can create really flexible markup.
  */
 class DesktopContainer extends Component {
-  state = {}
+  state = {activeItem: '/'}
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
@@ -101,16 +104,16 @@ class DesktopContainer extends Component {
                   <NavLink to='/'> Home </NavLink>
                 </Menu.Item>
                 <Menu.Item name='order' active={activeItem === 'order'} onClick={this.handleMenuClick} >
-                  <NavLink to='/order'> Orders </NavLink>
+                  <NavLink to='/order'> Login </NavLink>
                 </Menu.Item>
                 <Menu.Item name='reports' active={activeItem === 'reports'} onClick={this.handleMenuClick} >
-                  <NavLink to='/reports'> Reports </NavLink>
+                  <NavLink to='/reports'> Our Services </NavLink>
                 </Menu.Item >
                 <Menu.Item name='invoices' active={activeItem === 'invoices'} onClick={this.handleMenuClick} >
-                  <NavLink to='/invoices'> Invoices </NavLink>
+                  <NavLink to='/invoices'> Case Studies </NavLink>
                 </Menu.Item >
                 <Menu.Item name='manage' active={activeItem === 'manage'} onClick={this.handleMenuClick} >
-                  <NavLink to='/manage'> Manage </NavLink>
+                  <NavLink to='/manage'> About Us </NavLink>
                 </Menu.Item >
                 <Menu.Item position='right'>
                 </Menu.Item>
@@ -118,6 +121,7 @@ class DesktopContainer extends Component {
             </Menu>
             <MainPages/>
           </Segment>
+          {activeItem === '/' && <AboutUs/>}
         </Visibility>
       </Responsive>
 
@@ -131,6 +135,65 @@ const MainPages = () => (
     <Route exact path='/order' component={Login}></Route>
   </Switch>
 );
+
+const AboutUs = () => (
+  <div>
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+
+        </Header>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Our story began in 1776...
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+          A group of settlers established Spanish missions as well as military forts in what is now known as San Francisco. One of the families from that group of settlers discovered a local plant called the 'Yerba Buena' that had medicinal properties. Turns out that "good herb" had extremelly higg demand among the military outpost and the locals. Thus a family business was born.
+        </p>
+      </Grid.Column>
+      <Grid.Column floated='right' width={6}>
+        <Image bordered rounded size='large' src={SanFran} />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+    <Grid.Column floated='left' width={6}>
+      <Image bordered rounded size='large' src={Settler} />
+    </Grid.Column>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Rapid Growth
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+        A century later,  the family business has turned global with the arrival of Chinese immigrants in the 1850s. To meet the demand for the orient herbs, Yerba Buena Inc. started importing Chinese tea across the pacific. As a result, they established one of the first global supply chain network in the West Coast. Today, Yerba Buena Inc. has presence across the globe for importing and exporting all types of herbs, spices, tea, coffee, and a recent addition, "medical" marijuana.
+        </p>
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+
+        </Header>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Us Today
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+          As the 5th generation of the family takes over management, Yerba Buenas Inc. rebranded itself as YB Supply Chain and begins to explore a new frontier: blockchain technology.
+        </p>
+      </Grid.Column>
+      <Grid.Column floated='right' width={6}>
+        <Image bordered rounded size='medium' src={Future} />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+  </div>
+)
+
 
 DesktopContainer.propTypes = {
   children: PropTypes.node,

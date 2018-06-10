@@ -4,6 +4,7 @@ import { Form, Segment, Select, Input, Step } from 'semantic-ui-react'
 import StepComponent from './StepComponent'
 import CreateOrderFarm from './CreateOrderFarm'
 import ConfirmationShop from './ConfirmationShop'
+import ConfirmationFarm from './ConfirmationFarm'
 
 class OrderFarm extends Component {
   state = {grade: '', strain: '' , quantity: '', step: 'createOrder'}
@@ -35,6 +36,9 @@ class OrderFarm extends Component {
 
         {step === 'createOrder' &&
           <CreateOrderFarm step={step} handleStep={this.handleStep} />
+        }
+        {step === 'confirmation' &&
+          <ConfirmationFarm />
         }
 
       </div>
