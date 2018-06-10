@@ -21,13 +21,17 @@ class Login extends Component {
       <div>
         {!submittedUser && <div>
         <Form.Field className="quantityField" >
-          <label> User </label>
+          <label> Username </label>
           <Input placeholder='Enter username' onChange={this.handleChange} />
+        </Form.Field>
+        <Form.Field className="quantityField" >
+          <label> Password </label>
+          <Input type="password" placeholder='Enter password'/>
         </Form.Field>
         <Form.Button onClick={() => this.handleSubmit(this.state.user)}>Login</Form.Button>
         </div> }
-        {submittedUser === 'shop' && <Order /> }
-        {submittedUser === 'farm' && <OrderFarm /> }
+        {submittedUser === 'store' && <Order /> }
+        {submittedUser === 'producer' && <OrderFarm /> }
       </div>
     )
   }

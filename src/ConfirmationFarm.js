@@ -1,24 +1,13 @@
 import React, { Component } from 'react'
 import { Form, Segment, Select, Input, Step, Button } from 'semantic-ui-react'
 
-const soilOptions = [
-  { key: 'w', text: 'Water', value: 'water' },
-  { key: 'o', text: 'Oxygen', value: 'oxygen' },
-  { key: 'n', text: 'Nitrogen', value: 'nitrogen' },
-  { key: 'p', text: 'Phosphorus', value: 'phosphorus' }
-]
-
 class ConfirmationFarm extends Component {
 
   render() {
-    const {step, handleStep} = this.props
+    const {step, handleStep, user} = this.props
     return (
       <Segment inverted textAlign='center'>
         <Form inverted className="form">
-          <Form.Group>
-          <Form.Select className="dropdown" name='soilContent' control={Select} label='Soil' options={soilOptions} placeholder='Soil content' onChange={this.handleChange}/>
-          </Form.Group>
-
           <Form.Group inline>
             <Form.Field className="timeOfHarvest" >
               <label>Time of Harvest</label>
@@ -35,8 +24,8 @@ class ConfirmationFarm extends Component {
               <Form.Input name='quantity' value="your public key" placeholder='Desired grams' readOnly/>
             </Form.Field>
             <Form.Field className="statusField" >
-              <label>Current Status</label>
-              <Form.Input name='status' value="Picked up by carrier" placeholder='Current status' readOnly/>
+              <label>Device ID</label>
+              <Form.Input name='status' value={user} placeholder='Current status' readOnly/>
             </Form.Field>
           </Form.Group>
         <Form.Button onClick={() => handleStep(step)} >Confirm Shipment</Form.Button>
