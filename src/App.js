@@ -15,22 +15,35 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react'
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Switch,
+  Redirect
+} from 'react-router-dom'
+import Order from './Order'
+import Main from './Main'
+import Login from './Login'
+import SanFran from './sanfran.jpg'
+import Settler from './settler.jpg'
+import Future from './future.png'
 
 /* eslint-disable react/no-multi-comp */
 /* Heads up! HomepageHeading uses inline styling, however it's not the best practice. Use CSS or styled components for
  * such things.
  */
-const HomepageHeading = ({ mobile }) => (
+const HomepageHeading = () => (
   <Container text>
     <Header
       as='h1'
-      content='Imagine-a-Company'
+      content='YB-SupplyChain'
       inverted
       style={{
-        fontSize: mobile ? '2em' : '4em',
+        fontSize: '4em',
         fontWeight: 'normal',
         marginBottom: 0,
-        marginTop: mobile ? '1.5em' : '3em',
+        marginTop: '3em',
       }}
     />
     <Header
@@ -38,9 +51,9 @@ const HomepageHeading = ({ mobile }) => (
       content='Do whatever you want when you want to.'
       inverted
       style={{
-        fontSize: mobile ? '1.5em' : '1.7em',
+        fontSize: '1.7em',
         fontWeight: 'normal',
-        marginTop: mobile ? '0.5em' : '1.5em',
+        marginTop: '1.5em',
       }}
     />
     <Button primary size='huge'>
@@ -50,23 +63,21 @@ const HomepageHeading = ({ mobile }) => (
   </Container>
 )
 
-HomepageHeading.propTypes = {
-  mobile: PropTypes.bool,
-}
-
 /* Heads up!
  * Neither Semantic UI nor Semantic UI React offer a responsive navbar, however, it can be implemented easily.
  * It can be more complicated, but you can create really flexible markup.
  */
 class DesktopContainer extends Component {
-  state = {}
+  state = {activeItem: '/'}
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
 
+  handleMenuClick = (e, { name }) => this.setState({activeItem: name})
+
   render() {
     const { children } = this.props
-    const { fixed } = this.state
+    const { fixed, activeItem } = this.state
 
     return (
       <Responsive {...Responsive.onlyComputer}>
@@ -89,31 +100,100 @@ class DesktopContainer extends Component {
               size='large'
             >
               <Container>
-                <Menu.Item as='a' active>
-                  Home
+                <Menu.Item name='/' active={activeItem === '/'} onClick={this.handleMenuClick} >
+                  <NavLink to='/'> Home </NavLink>
                 </Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
-                <Menu.Item as='a'>Company</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item name='order' active={activeItem === 'order'} onClick={this.handleMenuClick} >
+                  <NavLink to='/order'> Login </NavLink>
+                </Menu.Item>
+                <Menu.Item name='reports' active={activeItem === 'reports'} onClick={this.handleMenuClick} >
+                  <NavLink to='/reports'> Our Services </NavLink>
+                </Menu.Item >
+                <Menu.Item name='invoices' active={activeItem === 'invoices'} onClick={this.handleMenuClick} >
+                  <NavLink to='/invoices'> Case Studies </NavLink>
+                </Menu.Item >
+                <Menu.Item name='manage' active={activeItem === 'manage'} onClick={this.handleMenuClick} >
+                  <NavLink to='/manage'> About Us </NavLink>
+                </Menu.Item >
                 <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
                 </Menu.Item>
               </Container>
             </Menu>
-            <HomepageHeading />
+            <MainPages/>
           </Segment>
+          {activeItem === '/' && <AboutUs/>}
         </Visibility>
-
-        {children}
       </Responsive>
+
     )
   }
 }
+
+const MainPages = () => (
+  <Switch>
+    <Route exact path='/' component={Main}></Route>
+    <Route exact path='/order' component={Login}></Route>
+  </Switch>
+);
+
+const AboutUs = () => (
+  <div>
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+
+        </Header>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Our story began in 1776...
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+          A group of settlers established Spanish missions as well as military forts in what is now known as San Francisco. One of the families from that group of settlers discovered a local plant called the 'Yerba Buena' that had medicinal properties. Turns out that "good herb" had extremelly higg demand among the military outpost and the locals. Thus a family business was born.
+        </p>
+      </Grid.Column>
+      <Grid.Column floated='right' width={6}>
+        <Image bordered rounded size='large' src={SanFran} />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+    <Grid.Column floated='left' width={6}>
+      <Image bordered rounded size='large' src={Settler} />
+    </Grid.Column>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Rapid Growth
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+        A century later,  the family business has turned global with the arrival of Chinese immigrants in the 1850s. To meet the demand for the orient herbs, Yerba Buena Inc. started importing Chinese tea across the pacific. As a result, they established one of the first global supply chain network in the West Coast. Today, Yerba Buena Inc. has presence across the globe for importing and exporting all types of herbs, spices, tea, coffee, and a recent addition, "medical" marijuana.
+        </p>
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+
+  <Grid container stackable verticalAlign='middle'>
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+
+        </Header>
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Us Today
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+          As the 5th generation of the family takes over management, Yerba Buenas Inc. rebranded itself as YB Supply Chain and begins to explore a new frontier: blockchain technology.
+        </p>
+      </Grid.Column>
+      <Grid.Column floated='right' width={6}>
+        <Image bordered rounded size='medium' src={Future} />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+  </div>
+)
+
 
 DesktopContainer.propTypes = {
   children: PropTypes.node,
@@ -328,5 +408,6 @@ const HomepageLayout = () => (
     </Segment>
   </ResponsiveContainer>
 )
+
 
 export default HomepageLayout
