@@ -27,9 +27,9 @@ handleChange = async (e, {value}) => {
       <Form inverted className="form">
 
         <Form.Group>
-        <Form.Select className="dropdown" value={user} name='user' control={Select} label='Devices' options={users} placeholder='Please select a device' onChange={this.handleChange}/>
+        <Form.Select className="dropdown" value={user} name='user' control={Select} label='Requests' options={users} placeholder='Please select a request' onChange={this.handleChange}/>
         </Form.Group>
-      <Form.Button onClick={() => handleStep(step)}>Create Order</Form.Button>
+      <Form.Button onClick={() => handleStep(step)}>Accept Request</Form.Button>
       </Form>
       </Segment>
   )}
