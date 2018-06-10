@@ -34,6 +34,7 @@
     "react-scripts": "1.1.4",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
-    "semantic-ui-react": "^0.81.1"
+    "semantic-ui-react": "^0.81.1",
+    "ursa": "^0.9.4"
   }
 }

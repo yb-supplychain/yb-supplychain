@@ -25,5 +25,5 @@ Then to run the app server and API server, simply run
 yarn start
 ```
 
-The react app server will route api calls to the api server. The factom endpoint
-proxies requests to Factom related endpoints.
+The react app server will route api calls to the api server. The `api` endpoint will
+query the Factom blockchain when necessary.
