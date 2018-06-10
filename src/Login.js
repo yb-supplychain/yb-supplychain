@@ -30,7 +30,7 @@ class Login extends Component {
         </Form.Field>
         <Form.Button onClick={() => this.handleSubmit(this.state.user)}>Login</Form.Button>
         </div> }
-        {submittedUser === 'store' && <Order /> }
+        {submittedUser === 'dispensary' && <Order /> }
         {submittedUser === 'producer' && <OrderFarm /> }
       </div>
     )

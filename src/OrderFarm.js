@@ -32,10 +32,9 @@ class OrderFarm extends Component {
     console.log(this.state.users)
   }
 
-  handleStep = (field) => {
-    console.log("in here")
+  handleStep = (field, data) => {
     if(field === 'createOrder') {
-      this.setState({step: 'confirmation'})
+      this.setState({step: 'confirmation', data })
     } else if (field === 'confirmation') {
       this.setState({step: 'status'})
     } else if (field === 'status') {
@@ -46,7 +45,7 @@ class OrderFarm extends Component {
   }
 
   render() {
-    const { value, quantity, step, users, user } = this.state
+    const { value, quantity, step, users, user, data } = this.state
     return (
       <div>
         <StepComponent step={this.state.step} />
@@ -56,7 +55,7 @@ class OrderFarm extends Component {
         }
 
         {step === 'confirmation' &&
-          <ConfirmationFarm step={step} user={user} handleStep={this.handleStep}/>
+          <ConfirmationFarm step={step} user={user} order={data} handleStep={this.handleStep}/>
         }
 
         {step === 'status' &&

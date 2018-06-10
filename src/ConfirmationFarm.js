@@ -10,29 +10,34 @@ const listOfDevices = [
 ]
 
 class ConfirmationFarm extends Component {
-
+  state = { order: {} }
     handleChange = (e, value) => {
-      this.setState({devices: value})
+      this.setState({devices: value })
     }
-
+  async componentDidMount() {
+    console.log(this.props);
+    const response = await fetch(`/api/order/${this.props.order}`);
+    const order = await response.json();
+    this.setState({ order });
+  }
+  createField(label, value, index) {
+    return(
+      <Form.Field className="form-field" key={index}>
+        <label>{label}</label>
+        <Form.Input name={label} value={value} readOnly/>
+      </Form.Field>
+    );
+  }
   render() {
     const {step, handleStep, user, devices} = this.props
+    const { order } = this.state;
+    console.log('order:', order);
     return (
       <Segment inverted textAlign='center'>
         <Form inverted className="form">
-          <Form.Group inline>
-            <Form.Field className="timeOfHarvest" >
-              <label>Time of Harvest</label>
-              <Form.Input name='timeOfHarvest' value="4:20pm" placeholder='Time of Harvest' readOnly/>
-            </Form.Field>
-          </Form.Group>
-          <Form.Group>
-          <Form.Select className="dropdown" value={devices} name='user' control={Select} label='Devices' options={listOfDevices} placeholder='Please select a device' onChange={this.handleChange}/>
-          </Form.Group>
-          <div>
-            <Button positive>Pesticide Free</Button>
-            <Button positive>Organic</Button>
-          </div>
+          {
+            Object.keys(order).length && Object.keys(order).map((key, index) => this.createField(key, order[key], index))
+          }
           <Form.Group>
             <Form.Field className="publicKeyField" >
               <label>Public Key</label>
@@ -46,7 +51,7 @@ class ConfirmationFarm extends Component {
         <Form.Button onClick={() => handleStep(step)} >Confirm Shipment</Form.Button>
         </Form>
       </Segment>
-    )
+    );
   }
 }
 

@@ -14,6 +14,25 @@ const strainOptions = [
 ]
 
 class CreateOrderShop extends Component {
+  state = { grade: '', strain: '', quantity: '' }
+
+  handleChange = (e, {name, value}) => {
+    this.setState({ [name]: value })
+      console.log('this.state:', this.state);
+  }
+
+  handleSubmit = async () => {
+    const response = await fetch('/api/order', {
+      method: 'POST',
+      body: JSON.stringify(this.state), // data can be `string` or {object}!
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    });
+    const id = await response.json();
+    console.log('id:', id);
+    this.props.handleStep(this.props.step);
+  }
 
   render() {
     const {step, handleStep} = this.props
@@ -34,7 +53,7 @@ class CreateOrderShop extends Component {
         <Input name='quantity' placeholder='Desired grams' onChange={this.handleChange} />
       </Form.Field>
       </Form.Group>
-      <Form.Button onClick={() => handleStep(step)}>Create Order</Form.Button>
+      <Form.Button onClick={() => this.handleSubmit()}>Create Order</Form.Button>
       </Form>
       </Segment>
   )}

@@ -190,7 +190,9 @@ router.get('/orders', async (req, res) => {
       body
     }
     const orders = await request(options);
-    res.json(orders);
+    const ordersObject = require(ordersFile);
+    const orderIds = Object.keys(ordersObject);
+    res.json(orderIds);
   } catch(e) {
       return res
         .status(502)
