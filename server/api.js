@@ -8,14 +8,21 @@ const path = require('path');
 const ursa = require('ursa');
 
 const userChain = require('../user_chain.json');
-const { encrypt, decrypt, keypair, encode } = require('./helpers');
+
+const { encrypt, decrypt, keypair, encode, decode } = require('./helpers');
 
 const apiKey = fs.readFileSync(path.resolve(__dirname, '../secrets.env'));
 const key = fs.readFileSync(path.resolve(__dirname, '../pw.env'));
+const keyserverToken = fs.readFileSync(path.resolve(__dirname, '../keyserver.secrets.env'));
 const router = express.Router();
 
+const ordersFile = path.resolve(__dirname, 'orders.json');
+const usersFile = path.resolve(__dirname, 'users.json');
+const keysPath = path.resolve(__dirname, '../keys');
+
 // Unique Chain Identifiers
-const orderTag = 'ybsc_orders';
+const ordersTag = 'ybsc_orders';
+const devicesTag = 'ybsc_devices';
 
 const factomOptions = {
     url: 'https://apiplus-api-sandbox-testnet.factom.com/v1/',
@@ -25,15 +32,33 @@ const factomOptions = {
     }
   };
 
+function keyserverOptions(id, type, method='GET', key) {
+  const options = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  options.url = `http://localhost:8080/pubkey/${type}/${id}`;
+  if (method === 'GET')
+    options.url = `${options.url}?token${keyserverToken}`;
+
+  if (method === 'POST' && !key) {
+    throw 'Must have key if posting to key server';
+  } else if (method === 'POST') {
+    options.json = true;
+    options.body = { key };
+  }
+  return options;
+}
+
 router.get('/', async (req, res) => {
+  console.log('getting factom');
   const factom = await request(factomOptions);
   res.json(JSON.parse(factom));
 });
 
 // add new user to user chain
 router.post('/user', async (req, res, next) => {
-  const usersFile = path.resolve(__dirname, 'users.json');
-
   try {
     const { id, category } = req.body;
     const users = require(usersFile);
@@ -43,6 +68,10 @@ router.post('/user', async (req, res, next) => {
     // create the key pair for encrypting data
     const key = await keypair(id);
     const publicKey = key.toPublicPem('base64');
+
+    // add key to server - broken
+    // const keyOptions = keyserverOptions(id, 'user', 'POST', publicKey);
+    // const addKey = await request(keyOptions);
 
     // prepare data for publishing on the blockchain
     const now = Date.now().toString();
@@ -94,9 +123,9 @@ router.get('/users', async (req, res) => {
   res.json(JSON.parse(users));
 });
 
-// GET /user
+// GET /user/:id
 // Retrieve a specific user from the chain
-router.get('/user/:id', async (req, res, next) => {
+router.get('/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const users = require('./users.json');
@@ -115,7 +144,6 @@ router.get('/user/:id', async (req, res, next) => {
 
     res.json(JSON.parse(content));
   } catch(e) {
-    console.log('e:', e);
     res.status(e.statusCode).json(JSON.parse(e.error));
   }
 });
@@ -131,7 +159,43 @@ router.post('/device', async (req, res) => {
 // GET /devices
 // Retrieve a list of all device ids
 router.get('/devices', async (req, res) => {
+  try {
+    const encodedTag = encode(devicesTag);
+    const body = {"external_ids": [encodedTag]};
+    const options = {
+      ...factomOptions,
+      url: `${factomOptions.url}chains/search`,
+      method: 'POST',
+      json: true,
+      body
+    }
+    const devices = await request(options);
+    res.json(devices);
+  } catch(e) {
+    res.status(e.statusCode).json(JSON.parse(e.error));
+  }
+});
 
+// GET /orders
+// Get list of all order ids
+router.get('/orders', async (req, res) => {
+  try {
+    const encodedTag = encode(ordersTag);
+    const body = {"external_ids": [encodedTag]};
+    const options = {
+      ...factomOptions,
+      url: `${factomOptions.url}chains/search`,
+      method: 'POST',
+      json: true,
+      body
+    }
+    const orders = await request(options);
+    res.json(orders);
+  } catch(e) {
+      return res
+        .status(502)
+        .send({ error: { message: e.message, code: e.code, type: e.type } });
+  }
 });
 
 // POST /order
@@ -142,7 +206,7 @@ router.post('/order', async (req, res) => {
   const order = req.body;
   // create a unique hash from our order to use as our id
   const id = crypto.createHash('sha256').update(JSON.stringify(order)).digest('hex').slice(0,10);
-  const encodedTag = encode(orderTag); // identifier to find our chains
+  const encodedTag = encode(ordersTag); // identifier to find our chains
   const encodedId = encode(id);
   const encodedNow = encode(Date.now());
   const encodedData = encode(JSON.stringify(order));
@@ -164,31 +228,86 @@ router.post('/order', async (req, res) => {
   }
 
   const orderHash = await request(options);
-  res.json(options);
+  const orders = require(ordersFile);
+
+  // store the order id and corresponding hash
+  const ordersJson = JSON.stringify({...orders, [id]: orderHash }, null, 2);
+  await fs.writeFileAsync(ordersFile, ordersJson);
+  res.json(orderHash);
 });
 
-// GET /orders
-// Get list of all order ids
-router.get('/orders', async (req, res) => {
+async function getOrder(orderId) {
+  try{
+    const orders = require(ordersFile);
+    const chainId = orders[orderId].chain_id;
 
-});
+    const options = {
+      ...factomOptions,
+      url: `${factomOptions.url}chains/${chainId}/entries/last`,
+      method: 'GET'
+    };
+    const order = await request(options);
 
-// IMPORTAnT
+    return decode(JSON.parse(order).content);
+  } catch(e) {
+    res.status(e.statusCode).json(JSON.parse(e.error));
+  }
+}
+
 // GET /order/:id
 router.get('/order/:id', async (req, res) => {
-  const id = req.params.id;
-
+  try{
+    const orderId = req.params.id;
+    const order = await getOrder(orderId);
+    res.json(JSON.parse(order));
+  } catch(e) {
+    res.status(e.statusCode).json(JSON.parse(e.error));
+  }
 });
 
-// POST /user
-// Add a new user to the user chain
+// PUT /order/:id
+// Update state of an order
+router.put('/order/:id', async (req, res) => {
+  try {
+    const { updaterId, updaterType, updates } = req.body;
+    const orderId = req.params.id;
+    const type = updaterType ? updaterType : 'user';
+    const orders = require(ordersFile);
+    const chainId = orders[orderId].chain_id;
+    const orderJson = await getOrder(req.params.id);
 
-// GET /users
-// Retrieve list of all users
+    let order = JSON.parse(orderJson);
+    order = {...order, ...updates};
+    // TODO:
+    // check if order has been updated
+    // get the id and type
+    // retrieve the key
+    // const pubKey = await request(keyserverOptions(type, updaterId, 'GET'));
+    // verify the signature
+    order.updater = { id: updaterId, type };
+    const msg = encode(JSON.stringify(order));
 
-// GET /user/:id
-// Get information for a specific user
-// Could potentially retrieve all pending orders
+    const privKey = ursa.createPrivateKey(fs.readFileSync(path.resolve(keysPath, `${updaterId}_privkey.pem`)));
+    order.signature = privKey.hashAndSign('sha256', msg, 'utf8', 'base64');
+    const options = {
+      ...factomOptions,
+      url: `${factomOptions.url}chains/${chainId}/entries`,
+      method: 'POST',
+      json: true,
+      body: {
+        "external_ids":[encode(orderId), encode(updaterId)],
+        "content": encode(JSON.stringify(order))
+      }
+    };
 
+    const entry = await request(options);
+
+    res.json(entry);
+  } catch(e) {
+      res
+        .status(502)
+        .send({ error: { message: e.message, code: e.code, type: e.type } });
+  }
+});
 
 module.exports = router;

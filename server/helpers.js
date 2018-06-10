@@ -20,6 +20,10 @@ function encode(input) {
 
   return new Buffer(string).toString('base64');
 }
+
+function decode(input) {
+  return new Buffer(input, 'base64').toString();
+}
 // encrypt and decrypt functions from
 // https://stackoverflow.com/questions/10548973/encrypting-and-decrypting-with-python-and-nodejs#10550004
 const encrypt = function (input, password=pw) {
@@ -102,6 +106,7 @@ module.exports = {
   encode,
   keypair,
   encrypt,
-  decrypt
+  decrypt,
+  decode
 };
 
